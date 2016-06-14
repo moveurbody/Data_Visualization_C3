@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load c3.css -->
+<link href="dist\c3.css" rel="stylesheet" type="text/css">
+
+<!-- Load d3.js and c3.js -->
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="dist\c3.js"></script>
+
+<html>
+<body>
+<div id="chart"></div>
+
+
+<script>
+
+var chart = c3.generate({
+	bindto: '#chart',
+    data: {
+        x: 'x',
+		x_format: '%Y-%m-%d %H:%M:%S.%L',
+        columns: [
+            ['x', 
+			'2016/6/2 09:00:00.000',
+			'2016/6/2 10:00:15.000',
+			'2016/6/2 11:00:15.001',
+			'2016/6/2 12:00:15.001',
+			'2016/6/2 13:00:15.001',
+			'2016/6/2 14:00:15.001',
+			'2016/6/2 15:00:15.001',
+			'2016/6/2 16:00:15.001',
+			
+
+			],
+            ['data1', 10, 0, 0,0,10,0,0,1,0,0,1,1,0,0,0,1,0,1,0,1],
+            ['data2',100,
+						100,
+						99,
+						99,
+						99,
+						99,
+						98,
+						98,
+						98,
+						98,
+						98,
+						97,
+						97,
+						
+],
+        ],
+        types: {
+            data1: 'step',
+            data2: 'line'
+        }
+    },
+    zoom: {
+        enabled: true
+    },
+    subchart: {
+        show: true
+    },
+    axis:{
+        x : {
+            type : 'timeseries',
+            localtime: true,
+            tick: {
+                format: '%Y-%m-%d %H:%M:%S',
+                fit: true,
+                
+            }
+        },
+        y:{
+            max: 100,
+            min: 0,
+        }
+    },
+	size:{
+		height: 600
+	}
+});
+
+
+</script>
+
+</body>
+</html> 

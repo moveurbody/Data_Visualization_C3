@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<style>
+
+svg {
+  font: 10px sans-serif;
+}
+
+.area {
+  fill: steelblue;
+  clip-path: url(#clip);
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+</style>
+
+<html>
+<body>
+<link href="dist/c3.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="dist/jszip-utils.min.js"></script>
+<!--<script type="text/javascript" src="dist/jszip.min.js"></script>-->
+<script type="text/javascript" src="dist/jszip.js"></script>
+<script type="text/javascript" src="dist/pes.js"></script>
+<script type="text/javascript" src="dist/c3.js"></script>
+<script src="//d3js.org/d3.v3.min.js"></script>
+
+
+<!--<script type="text/javascript" src="http://stuk.github.io/jszip/dist/jszip.js"></script>-->
+
+
+
+<script>
+
+	var text;
+	var obj;
+	function showError(elt, err) {
+		document.getElementById('elt').innerHTML = err;
+	}
+
+	function showContent(elt, content) {
+		document.getElementById('elt').innerHTML = content;
+	}
+	
+	function ListToArray(column,list){
+		var columns=[]
+		for (i=0;i<list.length;i++)
+		{
+			columns.push(list[i][column])
+		}
+		return columns;
+	}
+
+	//Self-Invoking Functions
+	(function ()	{
+	JSZipUtils.getBinaryContent('http://10.8.48.72/JSzip/ParsedData.zip', function(err, data) {
+	//JSZipUtils.getBinaryContent('http://htctaossdp4p1.htc.com.tw/Log_AND/20160614/0800/HTC_PWR_EXPERT-HT624BP00011-c27cc309-6d62-49b5-b6c8-ee5302a72e23-HSV_0080-20160614-075943-20160614-080033/ParsedFiles/ParsedData.zip', function(err, data) {
+	var elt = document.getElementById('jszip_utils');
+	
+	if(err) {
+		showError(elt, err);
+    }
+		
+	try {
+		JSZip.loadAsync(data)
+		.then(function(zip) {
+			return zip.file("ParsedData.csv").async("string");
+		})
+		.then(function (text) {
+			var P = new PES();
+			var CSVlist = P.readCSV(text);
+			//console.log(CSVlist)
+			var arrayDatetime=	ListToArray(0,CSVlist);
+			var arrayLevel=		ListToArray(1,CSVlist);
+			var arraytemp=		ListToArray(2,CSVlist);
+			var arrayvolt=			ListToArray(3,CSVlist);
+			var arraywifi=			ListToArray(4,CSVlist);
+			var arraybrightness=	ListToArray(5,CSVlist);
+			var arraydata_conn=	ListToArray(6,CSVlist);
+			var arraygps=			ListToArray(7,CSVlist);
+			var arrayplug=			ListToArray(8,CSVlist);
+			var arrayscreen=		ListToArray(9,CSVlist);
+			var arraysignal_strength=ListToArray(10,CSVlist);
+			
+			var chart = c3.generate({
+				data:{
+					x:'datetime',
+					columns:[
+						arrayDatetime,
+						arrayLevel,
+						arraytemp,
+						arrayvolt,
+						arraywifi,
+						arraybrightness,
+						arraydata_conn,
+						arraygps,
+						arrayplug,
+						arrayscreen,
+						arraysignal_strength
+					]
+				},
+				axis:{
+					x : {
+						type : 'timeseries',
+						localtime: true,
+						tick: {
+							format: '%Y-%m-%d %H:%M:%S',
+						}
+					},
+					y:{
+						max: 100,
+						min: 0,
+					}
+				},
+				size:{
+					height:600
+				},
+				zoom: {
+					enabled: true
+				},
+				subchart: {
+					show: true
+				},point: {
+        show: false
+    }
+			});
+				
+		},function error(e) {
+			showError(elt, e);
+		});
+					
+    }
+	catch(e) {
+		showError(elt, e);
+    }
+  });
+
+})();
+
+
+</script>
+
+<button id="demo" class="btn btn-primary" onclick="showCharts()">Run!</button>
+<p id="elt"></p>
+<div id="jszip_utils"></div>
+
+<div id="chart"></div>
+<script>
+
+</script>
+
+</body>
+</html> 
